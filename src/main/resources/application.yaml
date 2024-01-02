@@ -1,0 +1,14 @@
+server:
+  port: 7681
+
+spring:
+  profiles:
+    active: dev
+  # 开启虚拟线程
+  threads:
+    virtual:
+      enabled: true
+
+snowflake:
+  datacenter-id: 1
+  machine-id: 1

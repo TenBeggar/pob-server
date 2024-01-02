@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/pob
+    username: postgres
+    password: postgres
+  jpa:
+    show-sql: true
+    # 程序启动后根据 Entity 创建表
+#    generate-ddl: true
+
+logging:
+  level:
+    # 打印 RestTemplate 请求和相应
+    com.tenbeggar.pob.config.LoggingInterceptor: debug
+
+riot:
+  # Riot 开发者门户为第三方提供的 API key
+  token: RGAPI-f35cacc0-cda8-4508-bbae-6b0fbb806117
+  # LOL 静态数据存放路径
+  data-dragon: C:/Users/beggar/logs/riot
+
+clock:
+  delay:
+    # 定时处理未进行的数据同步任务
+    match: 60000
+    # 定时处理失败的数据同步任务
+    retry-match: 120000
+
+pob:
+  path: http://localhost

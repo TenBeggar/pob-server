@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://120.53.238.46:5432/pob
+    username: postgres
+    password: 78290@beggar.ten
+
+riot:
+  # Riot 开发者门户为第三方提供的 API key
+  token: RGAPI-f35cacc0-cda8-4508-bbae-6b0fbb806117
+  # LOL 静态数据存放路径
+  data-dragon: /home/pob-server
+
+clock:
+  delay:
+    # 定时处理未进行的数据同步任务
+    match: 60000
+    # 定时处理失败的数据同步任务
+    retry-match: 120000
+
+pob:
+  path: http://120.53.238.46
