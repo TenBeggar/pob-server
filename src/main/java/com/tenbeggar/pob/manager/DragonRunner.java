@@ -15,13 +15,14 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StopWatch;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Component
 public class DragonRunner implements ApplicationRunner {
 
     @Resource
-    private RiotProperties properties;
+    private RiotProperties riotProperties;
     @Resource
     private DragonClient dragonClient;
     @Resource
@@ -35,7 +36,6 @@ public class DragonRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         StopWatch stopWatch = new StopWatch();
         log.info("POB启动中...");
-        long start = System.currentTimeMillis();
         stopWatch.start("《英雄联盟》获取最新版本");
         List<String> versions = dragonClient.allVersions();
         if (CollectionUtils.isEmpty(versions)) {
@@ -43,29 +43,22 @@ public class DragonRunner implements ApplicationRunner {
         }
         String latestVersion = versions.get(0);
         stopWatch.stop();
-        String language = properties.getLanguage();
-        boolean sync;
-        List<HistoryVersionEntity> historyVersionEntities = historyVersionRepository.findAllByVersion(latestVersion);
-        if (CollectionUtils.isEmpty(historyVersionEntities)) {
-            stopWatch.start("《英雄联盟》资源下载");
-            dragonService.downloadDataDragon(latestVersion);
-            stopWatch.stop();
-            sync = true;
-        } else {
-            sync = historyVersionEntities.stream().noneMatch(e -> e.getLanguage().equals(language));
-        }
-        if (sync) {
-            stopWatch.start("《英雄联盟》同步英雄数据");
+        stopWatch.start("《英雄联盟》资源下载");
+        dragonService.downloadDataDragon(latestVersion);
+        stopWatch.stop();
+        stopWatch.start("《英雄联盟》同步英雄数据");
+        String language = riotProperties.getLanguage();
+        HistoryVersionEntity historyVersionEntity = historyVersionRepository.findAllByVersionAndLanguage(latestVersion, language);
+        if (Objects.isNull(historyVersionEntity)) {
             dragonService.syncChampion(latestVersion, language);
-            stopWatch.stop();
             historyVersionRepository.save(HistoryVersionEntity.builder().version(latestVersion).language(language).build());
         }
-        dragonService.setCurrentVersion(latestVersion);
+        stopWatch.stop();
         stopWatch.start("《POB》缓存英雄数据");
+        dragonService.setCurrentVersion(latestVersion);
         dragonService.setChampionMap(latestVersion);
         stopWatch.stop();
+        log.info("POB启动完成");
         log.info(stopWatch.prettyPrint());
-        long end = System.currentTimeMillis();
-        log.info("POB启动完成，总用时：{}s", (end - start) / 1000.0);
     }
 }

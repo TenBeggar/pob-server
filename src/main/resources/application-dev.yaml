@@ -14,16 +14,5 @@ logging:
     # 打印 RestTemplate 请求和相应
     com.tenbeggar.pob.config.LoggingInterceptor: debug
 
-riot:
-  # LOL 静态数据存放路径
-  dragon-dir: C:\Users\beggar\Desktop\lol
-
-clock:
-  delay:
-    # 定时处理未进行的数据同步任务
-    match: 60000
-    # 定时处理失败的数据同步任务
-    retry-match: 120000
-
 pob:
   swagger-ui: http://localhost

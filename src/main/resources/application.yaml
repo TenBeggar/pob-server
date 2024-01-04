@@ -13,8 +13,17 @@ snowflake:
   datacenter-id: 1
   machine-id: 1
 
+clock:
+  delay:
+    # 定时处理未进行的数据同步任务
+    match: 60000
+    # 定时处理失败的数据同步任务
+    retry-match: 120000
+
 riot:
   # Riot 开发者门户为第三方提供的 API key
-  token: RGAPI-bbaafe45-7c04-44a4-83a3-21e8effb038e
+  token: RGAPI-9e6e36bb-e72a-4649-92e2-022aa4ec787b
   # 设置语言
   language: zh_CN
+  # LOL 静态数据存放路径
+  dragon-path: /dragon

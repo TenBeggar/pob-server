@@ -13,8 +13,8 @@ import java.nio.file.StandardCopyOption;
 
 public class Extractor {
 
-    public static void extractTGZ(String sourceFilePath, String targetFolder) throws IOException {
-        try (FileInputStream fileInputStream = new FileInputStream(sourceFilePath);
+    public static void extractTGZ(File sourceFile, File targetFolder) throws IOException {
+        try (FileInputStream fileInputStream = new FileInputStream(sourceFile);
              BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
              GzipCompressorInputStream gzipCompressorInputStream = new GzipCompressorInputStream(bufferedInputStream);
              TarArchiveInputStream tarArchiveInputStream = new TarArchiveInputStream(gzipCompressorInputStream)) {

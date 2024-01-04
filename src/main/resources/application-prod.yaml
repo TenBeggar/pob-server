@@ -5,16 +5,9 @@ spring:
     username: postgres
     password: 78290@beggar.ten
 
-riot:
-  # LOL 静态数据存放路径
-  dragon-dir: /usr/share/nginx/html
-
-clock:
-  delay:
-    # 定时处理未进行的数据同步任务
-    match: 60000
-    # 定时处理失败的数据同步任务
-    retry-match: 120000
+logging:
+  file:
+    path: log
 
 pob:
   swagger-ui: http://120.53.238.46

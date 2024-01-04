@@ -10,6 +10,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -92,6 +93,7 @@ public class DragonService {
     }
 
     public String downloadDataDragon(String version) {
-        return dragonClient.downloadDataDragon(version, riotProperties.getDragonDir());
+        Path path = Path.of(System.getProperty("user.dir"), riotProperties.getDragonPath());
+        return dragonClient.downloadDataDragon(version, path.toString());
     }
 }

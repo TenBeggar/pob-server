@@ -11,6 +11,7 @@ import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -40,21 +41,32 @@ public class DragonClient {
         return restTemplate.getForObject(ALL_VERSIONS, List.class);
     }
 
-    public String downloadDataDragon(String version, String dir) {
-        String fileName = String.format("%s-%s", PREFIX_FILE_DRAGON, version);
-        Path tgzPath = Paths.get(dir, fileName + SUFFIX_FILE_DRAGON);
-        RequestCallback requestCallback = clientHttpRequest -> clientHttpRequest.getHeaders().setAccept(List.of(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
-        ResponseExtractor<Boolean> responseExtractor = clientHttpResponse -> {
-            try (InputStream inputStream = clientHttpResponse.getBody()) {
-                Files.copy(inputStream, tgzPath, StandardCopyOption.REPLACE_EXISTING);
-            }
-            return true;
-        };
-        restTemplate.execute(DATA_DRAGON, HttpMethod.GET, requestCallback, responseExtractor, Map.of("version", version));
-        String targetFolder = Paths.get(dir, fileName).toString();
+    public String downloadDataDragon(String version, String url) {
+        File downloadDir = new File(url);
+        if (!downloadDir.exists()) {
+            downloadDir.mkdirs();
+        }
+        log.info("《英雄联盟》资源目录：{}", downloadDir.getAbsolutePath());
+        String targetName = String.format("%s-%s", PREFIX_FILE_DRAGON, version);
+        File targetFolder = new File(downloadDir, targetName);
+        if (targetFolder.exists() && targetFolder.isDirectory()) {
+            return targetFolder.getAbsolutePath();
+        }
+        Path tgzPath = Paths.get(url, targetName + SUFFIX_FILE_DRAGON);
+        File tgzFile = tgzPath.toFile();
+        if (!tgzFile.exists()) {
+            RequestCallback requestCallback = clientHttpRequest -> clientHttpRequest.getHeaders().setAccept(List.of(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL));
+            ResponseExtractor<Boolean> responseExtractor = clientHttpResponse -> {
+                try (InputStream inputStream = clientHttpResponse.getBody()) {
+                    Files.copy(inputStream, tgzPath, StandardCopyOption.REPLACE_EXISTING);
+                }
+                return true;
+            };
+            restTemplate.execute(DATA_DRAGON, HttpMethod.GET, requestCallback, responseExtractor, Map.of("version", version));
+        }
         try {
-            Extractor.extractTGZ(tgzPath.toString(), targetFolder);
-            return targetFolder;
+            Extractor.extractTGZ(tgzFile, targetFolder);
+            return targetFolder.getAbsolutePath();
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
