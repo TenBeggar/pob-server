@@ -1,7 +1,6 @@
 package com.tenbeggar.pob.entity;
 
-import com.tenbeggar.pob.properties.Continent;
-import com.tenbeggar.pob.properties.TaskStatus;
+import com.tenbeggar.pob.enums.TaskStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -20,8 +19,7 @@ public class MatchTaskEntity extends BaseEntity {
     /**
      * 州
      */
-    @Enumerated(value = EnumType.STRING)
-    private Continent continent;
+    private String continent;
 
     /**
      * 召唤师puuid

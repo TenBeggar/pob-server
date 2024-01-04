@@ -2,9 +2,8 @@ package com.tenbeggar.pob.service;
 
 import com.tenbeggar.pob.entity.MatchTaskBillboardEntity;
 import com.tenbeggar.pob.entity.MatchTaskEntity;
-import com.tenbeggar.pob.events.MatchTaskEvent;
-import com.tenbeggar.pob.properties.Continent;
-import com.tenbeggar.pob.properties.TaskStatus;
+import com.tenbeggar.pob.enums.TaskStatus;
+import com.tenbeggar.pob.manager.MatchTaskEvent;
 import com.tenbeggar.pob.repository.MatchTaskBillboardRepository;
 import com.tenbeggar.pob.repository.MatchTaskRepository;
 import jakarta.annotation.Resource;
@@ -40,7 +39,7 @@ public class MatchTaskBillboardService {
      * 发布任务-同步召唤师对局记录到当下
      */
     @Transactional
-    public void postMatchTask(Continent continent, String puuid) {
+    public void postMatchTask(String continent, String puuid) {
         MatchTaskBillboardEntity matchTaskBillboardEntity = matchTaskBillboardRepository.findByContinentAndPuuid(continent, puuid);
         if (Objects.isNull(matchTaskBillboardEntity)) {
             matchTaskBillboardEntity = MatchTaskBillboardEntity.builder()
@@ -74,7 +73,7 @@ public class MatchTaskBillboardService {
         MatchTaskEntity nextMatchTaskEntity = MatchTaskEntity.builder()
                 .continent(matchTaskEntity.getContinent()).puuid(matchTaskEntity.getPuuid())
                 .startTime(matchTaskEntity.getStartTime()).endTime(matchTaskEntity.getEndTime())
-                .start(matchTaskEntity.getStart() + 1).count(matchTaskEntity.getCount())
+                .start(matchTaskEntity.getStart() + matchTaskEntity.getCount()).count(matchTaskEntity.getCount())
                 .status(TaskStatus.NONE).retryCount(0).build();
         matchTaskRepository.save(nextMatchTaskEntity);
     }

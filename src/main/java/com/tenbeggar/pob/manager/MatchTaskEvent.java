@@ -1,4 +1,4 @@
-package com.tenbeggar.pob.events;
+package com.tenbeggar.pob.manager;
 
 import com.tenbeggar.pob.entity.MatchTaskEntity;
 import lombok.Getter;

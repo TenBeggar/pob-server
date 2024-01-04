@@ -6,6 +6,6 @@ import io.swagger.v3.oas.annotations.servers.Server;
 
 @OpenAPIDefinition(
         info = @Info(title = "POB API", description = "Player OB server.", version = "0.0.1-SNAPSHOT"),
-        servers = @Server(url = "${pob.path}:${server.port}"))
+        servers = @Server(url = "${pob.swagger-ui}:${server.port}"))
 public class SpringDocConfig {
 }

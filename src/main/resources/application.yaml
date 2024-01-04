@@ -12,3 +12,9 @@ spring:
 snowflake:
   datacenter-id: 1
   machine-id: 1
+
+riot:
+  # Riot 开发者门户为第三方提供的 API key
+  token: RGAPI-bbaafe45-7c04-44a4-83a3-21e8effb038e
+  # 设置语言
+  language: zh_CN

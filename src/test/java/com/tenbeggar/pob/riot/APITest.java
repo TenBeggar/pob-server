@@ -1,9 +1,10 @@
 package com.tenbeggar.pob.riot;
 
 import com.tenbeggar.pob.entity.SummonerMatchEntity;
-import com.tenbeggar.pob.properties.Continent;
+import com.tenbeggar.pob.enums.Continent;
 import com.tenbeggar.pob.repository.SummonerMatchRepository;
 import com.tenbeggar.pob.riot.domain.Match;
+import com.tenbeggar.pob.service.DragonService;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -44,7 +45,6 @@ public class APITest {
     @Test
     void match() {
         Match match = restTemplate.getForObject(MATCH_BY_CONTINENT_MATCHID, Match.class, Continent.asia, "KR_6823337832");
-        System.out.println(match);
     }
 
     @Resource
@@ -57,11 +57,15 @@ public class APITest {
     }
 
     @Resource
-    private DragonClient dragonClient;
+    private DragonService dragonService;
 
     @Test
     void dataDragon() {
-        String version = dragonClient.latestVersion();
-        dragonClient.downloadDataDragon(version);
+        String path = dragonService.downloadDataDragon("13.24.1");
+    }
+
+    @Test
+    void champions() {
+        dragonService.syncChampion("13.24.1", "zh_CN");
     }
 }

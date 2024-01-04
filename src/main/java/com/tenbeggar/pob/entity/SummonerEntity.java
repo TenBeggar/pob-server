@@ -1,9 +1,7 @@
 package com.tenbeggar.pob.entity;
 
-import com.tenbeggar.pob.properties.Region;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,6 +25,7 @@ public class SummonerEntity extends BaseEntity {
     /**
      * 加密后的puuid，精确长度78个字符
      */
+    @Column(unique = true)
     private String puuid;
 
     /**
@@ -52,6 +51,5 @@ public class SummonerEntity extends BaseEntity {
     /**
      * 召唤师所在区域
      */
-    @Enumerated(value = EnumType.STRING)
-    private Region region;
+    private String region;
 }

@@ -1,4 +1,4 @@
-package com.tenbeggar.pob.properties;
+package com.tenbeggar.pob.enums;
 
 /**
  * 区域
@@ -86,12 +86,13 @@ public enum Region {
     vn2,
     ;
 
-    public Continent toContinent() {
-        return switch (this) {
-            case na1, br1, la1, la2 -> Continent.americas;
-            case kr, jp1 -> Continent.asia;
-            case oc1, ph2, sg2, th2, tw2, vn2 -> Continent.sea;
-            case eun1, euw1, tr1, ru -> Continent.europe;
+    public static Continent toContinent(String region) {
+        return switch (region) {
+            case "na1", "br1", "la1", "la2" -> Continent.americas;
+            case "kr", "jp1" -> Continent.asia;
+            case "oc1", "ph2", "sg2", "th2", "tw2", "vn2" -> Continent.sea;
+            case "eun1", "euw1", "tr1", "ru" -> Continent.europe;
+            default -> null;
         };
     }
 }

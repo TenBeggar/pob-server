@@ -1,7 +1,5 @@
 package com.tenbeggar.pob.riot.domain;
 
-import com.tenbeggar.pob.properties.GameMode;
-import com.tenbeggar.pob.properties.GameType;
 import lombok.Data;
 
 import java.util.List;
@@ -55,12 +53,12 @@ public class MatchInfo {
     /**
      * 游戏模式
      */
-    public GameMode gameMode;
+    public String gameMode;
 
     /**
      * 游戏类型，详细参考：https://static.developer.riotgames.com/docs/lol/gameTypes.json
      */
-    public GameType gameType;
+    public String gameType;
 
     /**
      * 地图id，详细参考：https://static.developer.riotgames.com/docs/lol/maps.json

@@ -15,10 +15,8 @@ logging:
     com.tenbeggar.pob.config.LoggingInterceptor: debug
 
 riot:
-  # Riot 开发者门户为第三方提供的 API key
-  token: RGAPI-f35cacc0-cda8-4508-bbae-6b0fbb806117
   # LOL 静态数据存放路径
-  data-dragon: C:/Users/beggar/logs/riot
+  dragon-dir: C:\Users\beggar\Desktop\lol
 
 clock:
   delay:
@@ -28,4 +26,4 @@ clock:
     retry-match: 120000
 
 pob:
-  path: http://localhost
+  swagger-ui: http://localhost

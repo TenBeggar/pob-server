@@ -158,6 +158,8 @@ public class ParticipantVO {
     private Integer visionScore;
 
     //英雄
+    @Schema(description = "英雄头像文件名")
+    private String championImage;
     @Schema(description = "英雄id，v11.4版本之前该字段无效，需根据championName确定英雄")
     private Integer championId;
     @Schema(description = "英雄名称")

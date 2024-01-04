@@ -1,4 +1,4 @@
-package com.tenbeggar.pob.properties;
+package com.tenbeggar.pob.enums;
 
 /**
  * 游戏类型，详细参考：https://static.developer.riotgames.com/docs/lol/gameTypes.json

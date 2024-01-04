@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface MatchRepository extends JpaRepository<MatchEntity, String> {
 
+    MatchEntity findByMatchId(String matchId);
+
     List<MatchEntity> findAllByMatchIdIn(List<String> matchIds);
 }

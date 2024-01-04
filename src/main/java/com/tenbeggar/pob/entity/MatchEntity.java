@@ -1,11 +1,8 @@
 package com.tenbeggar.pob.entity;
 
-import com.tenbeggar.pob.properties.GameMode;
-import com.tenbeggar.pob.properties.GameType;
 import com.tenbeggar.pob.riot.domain.MatchMetadata;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -62,14 +59,12 @@ public class MatchEntity extends BaseEntity {
     /**
      * 游戏模式
      */
-    @Enumerated(value = EnumType.STRING)
-    public GameMode gameMode;
+    public String gameMode;
 
     /**
      * 游戏类型，详细参考：https://static.developer.riotgames.com/docs/lol/gameTypes.json
      */
-    @Enumerated(value = EnumType.STRING)
-    public GameType gameType;
+    public String gameType;
 
     /**
      * 地图id，详细参考：https://static.developer.riotgames.com/docs/lol/maps.json
@@ -89,6 +84,7 @@ public class MatchEntity extends BaseEntity {
     /**
      * 冗余字段，对局id
      */
+    @Column(unique = true)
     public String matchId;
 
     /**

@@ -1,4 +1,4 @@
-package com.tenbeggar.pob.properties;
+package com.tenbeggar.pob.riot;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,5 +16,7 @@ public class RiotProperties {
 
     private String token;
 
-    private String dataDragon;
+    private String language;
+
+    private String dragonDir;
 }

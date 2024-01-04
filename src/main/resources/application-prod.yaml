@@ -6,10 +6,8 @@ spring:
     password: 78290@beggar.ten
 
 riot:
-  # Riot 开发者门户为第三方提供的 API key
-  token: RGAPI-f35cacc0-cda8-4508-bbae-6b0fbb806117
   # LOL 静态数据存放路径
-  data-dragon: /home/pob-server
+  dragon-dir: /usr/share/nginx/html
 
 clock:
   delay:
@@ -19,4 +17,4 @@ clock:
     retry-match: 120000
 
 pob:
-  path: http://120.53.238.46
+  swagger-ui: http://120.53.238.46

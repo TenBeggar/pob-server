@@ -2,7 +2,6 @@ package com.tenbeggar.pob.service;
 
 import com.tenbeggar.pob.controller.vo.SummonerVO;
 import com.tenbeggar.pob.entity.SummonerEntity;
-import com.tenbeggar.pob.properties.Region;
 import com.tenbeggar.pob.repository.SummonerRepository;
 import com.tenbeggar.pob.riot.SummonerClient;
 import com.tenbeggar.pob.riot.domain.Summoner;
@@ -21,10 +20,10 @@ public class SummonerService {
     @Resource
     private SummonerClient summonerClient;
 
-    public SummonerVO findByRegionAndName(Region region, String name) {
+    public SummonerVO findByRegionAndName(String region, String name) {
         SummonerEntity summonerEntity = summonerRepository.findByRegionAndName(region, name);
         if (Objects.isNull(summonerEntity)) {
-            Summoner summoner = summonerClient.findByRegionAndName(region.name(), name);
+            Summoner summoner = summonerClient.findByRegionAndName(region, name);
             summonerEntity = new SummonerEntity();
             BeanUtils.copyProperties(summoner, summonerEntity);
             summonerEntity.setRegion(region);

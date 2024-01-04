@@ -1,4 +1,4 @@
-package com.tenbeggar.pob.properties;
+package com.tenbeggar.pob.enums;
 
 /**
  * 同步状态

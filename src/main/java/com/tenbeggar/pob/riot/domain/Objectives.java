@@ -38,6 +38,5 @@ public class Objectives {
      */
     private Objective inhibitor;
 
-    //TODO
-    private Objective horde;
+    private Objective horde;//TODO
 }

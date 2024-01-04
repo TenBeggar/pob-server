@@ -1,4 +1,4 @@
-package com.tenbeggar.pob.properties;
+package com.tenbeggar.pob.enums;
 
 /**
  * 游戏模式，详情参考：https://static.developer.riotgames.com/docs/lol/gameModes.json

@@ -1,9 +1,6 @@
 package com.tenbeggar.pob.entity;
 
-import com.tenbeggar.pob.properties.ObjectiveType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.*;
 
@@ -22,8 +19,7 @@ public class ObjectiveEntity extends BaseEntity {
     /**
      * 目标类型
      */
-    @Enumerated(value = EnumType.STRING)
-    private ObjectiveType objectiveName;
+    private String objectiveName;
 
     /**
      * 是否首杀
@@ -34,6 +30,11 @@ public class ObjectiveEntity extends BaseEntity {
      * 击杀次数
      */
     private Integer kills;
+
+    /**
+     * 冗余字段，对局id
+     */
+    public String matchId;
 
     /**
      * 冗余字段，队伍id

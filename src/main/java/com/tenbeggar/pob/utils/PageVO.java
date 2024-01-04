@@ -19,20 +19,6 @@ public class PageVO<T> {
         return new PageVO<>(content, total);
     }
 
-    public static <T> PageVO<T> build(List<?> content, Class<T> clazz, long total) {
-        List<T> vos = new ArrayList<>();
-        try {
-            for (Object o : content) {
-                T t = clazz.getDeclaredConstructor().newInstance();
-                BeanUtils.copyProperties(o, t);
-                vos.add(t);
-            }
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
-        return new PageVO<>(vos, total);
-    }
-
     public static <T> PageVO<T> build(Page<T> page) {
         return build(page.getContent(), page.getTotalElements());
     }

@@ -1,6 +1,5 @@
 package com.tenbeggar.pob.riot;
 
-import com.tenbeggar.pob.properties.Region;
 import com.tenbeggar.pob.riot.domain.Summoner;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Repository;
@@ -20,7 +19,7 @@ public class SummonerClient {
         return restTemplate.getForObject(SUMMONER_BY_REGION_NAME, Summoner.class, region, name);
     }
 
-    public Summoner findByRegionAndPuuid(Region region, String puuid) {
+    public Summoner findByRegionAndPuuid(String region, String puuid) {
         return restTemplate.getForObject(SUMMONER_BY_REGION_PUUID, Summoner.class, region, puuid);
     }
 }

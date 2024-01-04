@@ -187,8 +187,7 @@ public class ParticipantEntity extends BaseEntity {
     private Integer visionClearedPings;//清除视野
     private Integer baitPings;//诱饵
 
-    //TODO
-    private Integer playerAugment1;
+    private Integer playerAugment1;//TODO
     private Integer playerAugment2;
     private Integer playerAugment3;
     private Integer playerAugment4;

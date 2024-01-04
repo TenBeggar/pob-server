@@ -31,8 +31,7 @@ public class Participant {
     private Integer largestMultiKill;//一次大杀特杀过程中击杀最多的次数
     private Integer largestKillingSpree;//最多击杀次数，连续击杀对手且中途不能死亡
 
-    //TODO
-    private Integer unrealKills;
+    private Integer unrealKills;//TODO
 
     //中立生物 & 小兵
     private Integer dragonKills;//击杀小龙次数
@@ -182,16 +181,14 @@ public class Participant {
     private Integer visionClearedPings;//清除视野
     private Integer baitPings;//诱饵
 
-    //TODO
-    private Integer playerAugment1;
+    private Integer playerAugment1;//TODO
     private Integer playerAugment2;
     private Integer playerAugment3;
     private Integer playerAugment4;
 
     private Integer playerSubteamId;
 
-    //TODO
-    private Mission missions;
-    private Challenge challenges;//勋章
+    //    private Mission missions;//TODO
+//    private Challenge challenges;//勋章
     private Perk perks;//天赋选择
 }

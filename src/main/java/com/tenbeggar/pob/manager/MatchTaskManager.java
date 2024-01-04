@@ -1,9 +1,8 @@
-package com.tenbeggar.pob.events;
+package com.tenbeggar.pob.manager;
 
 import com.tenbeggar.pob.entity.MatchTaskEntity;
 import com.tenbeggar.pob.entity.SummonerMatchEntity;
-import com.tenbeggar.pob.properties.Continent;
-import com.tenbeggar.pob.properties.TaskStatus;
+import com.tenbeggar.pob.enums.TaskStatus;
 import com.tenbeggar.pob.repository.SummonerMatchRepository;
 import com.tenbeggar.pob.riot.MatchClient;
 import com.tenbeggar.pob.service.MatchService;
@@ -58,7 +57,7 @@ public class MatchTaskManager {
         if (Objects.isNull(matchTaskEntity)) {
             return;
         }
-        Continent continent = matchTaskEntity.getContinent();
+        String continent = matchTaskEntity.getContinent();
         String puuid = matchTaskEntity.getPuuid();
         List<String> matchIds = null;
         try {

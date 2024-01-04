@@ -1,9 +1,9 @@
 package com.tenbeggar.pob.service;
 
-import com.tenbeggar.pob.controller.vo.MatchVO;
+import com.tenbeggar.pob.controller.vo.*;
 import com.tenbeggar.pob.entity.*;
-import com.tenbeggar.pob.properties.Continent;
-import com.tenbeggar.pob.properties.ObjectiveType;
+import com.tenbeggar.pob.enums.ObjectiveType;
+import com.tenbeggar.pob.enums.Region;
 import com.tenbeggar.pob.repository.*;
 import com.tenbeggar.pob.riot.MatchClient;
 import com.tenbeggar.pob.riot.domain.Match;
@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,8 @@ public class MatchService {
 
     @Resource
     private MatchTaskBillboardService matchTaskBillboardService;
+    @Resource
+    private DragonService dragonService;
 
     @Resource
     private SummonerRepository summonerRepository;
@@ -50,26 +53,69 @@ public class MatchService {
     public PageVO<MatchVO> pageBySummonerPobId(String summonerPobId, Integer current, Integer size) {
         Optional<SummonerEntity> optional = summonerRepository.findById(summonerPobId);
         SummonerEntity summonerEntity = optional.orElseThrow(() -> new RuntimeException("当前用户不存在"));
-        matchTaskBillboardService.postMatchTask(summonerEntity.getRegion().toContinent(), summonerEntity.getPuuid());
+        matchTaskBillboardService.postMatchTask(Region.toContinent(summonerEntity.getRegion()).name(), summonerEntity.getPuuid());
         Pageable pageable = PageRequest.of(current, size, Sort.by("matchId").descending());
         Page<SummonerMatchEntity> summonerMatchPage = summonerMatchRepository.findAllByPuuid(summonerEntity.getPuuid(), pageable);
         List<String> matchIds = summonerMatchPage.get().map(SummonerMatchEntity::getMatchId).collect(Collectors.toList());
         List<MatchEntity> matchEntities = matchRepository.findAllByMatchIdIn(matchIds);
-        return PageVO.build(matchEntities, MatchVO.class, summonerMatchPage.getTotalElements());
+        List<MatchVO> matchVOs = matchEntities.stream().map(this::entity2VO).collect(Collectors.toList());
+        return PageVO.build(matchVOs, summonerMatchPage.getTotalElements());
+    }
+
+    private MatchVO entity2VO(MatchEntity matchEntity) {
+        MatchVO matchVO = new MatchVO();
+        BeanUtils.copyProperties(matchEntity, matchVO);
+        List<ParticipantEntity> participantEntities = participantRepository.findAllByMatchId(matchVO.getMatchId());
+        List<ParticipantVO> participants = participantEntities.stream().map(e -> {
+            ParticipantVO participantVO = new ParticipantVO();
+            BeanUtils.copyProperties(e, participantVO);
+            ChampionEntity championEntity = dragonService.championById(participantVO.getChampionId());
+            participantVO.setChampionImage(championEntity.getImage());
+            return participantVO;
+        }).collect(Collectors.toList());
+        List<TeamEntity> teamEntities = teamRepository.findAllByMatchId(matchVO.getMatchId());
+        List<TeamVO> teams = teamEntities.stream().map(e -> {
+            TeamVO teamVO = new TeamVO();
+            BeanUtils.copyProperties(e, teamVO);
+            List<BanEntity> banEntities = banRepository.findAllByMatchIdAndTeamId(e.getMatchId(), teamVO.getTeamId());
+            List<BanVO> bans = banEntities.stream().map(a -> {
+                BanVO banVO = new BanVO();
+                BeanUtils.copyProperties(a, banVO);
+                ChampionEntity championEntity = dragonService.championById(banVO.getChampionId());
+                banVO.setChampionImage(championEntity.getImage());
+                return banVO;
+            }).collect(Collectors.toList());
+            List<ObjectiveEntity> objectiveEntities = objectiveRepository.findAllByMatchIdAndTeamId(e.getMatchId(), teamVO.getTeamId());
+            List<ObjectiveVO> objectives = objectiveEntities.stream().map(a -> {
+                ObjectiveVO objectiveVO = new ObjectiveVO();
+                BeanUtils.copyProperties(a, objectiveVO);
+                return objectiveVO;
+            }).collect(Collectors.toList());
+            teamVO.setBans(bans);
+            teamVO.setObjectives(objectives);
+            return teamVO;
+        }).collect(Collectors.toList());
+        matchVO.setParticipants(participants);
+        matchVO.setTeams(teams);
+        return matchVO;
     }
 
     @Transactional
-    public void saveAllByContinentAndMatchIds(Continent continent, List<String> matchIds) {
+    public void saveAllByContinentAndMatchIds(String continent, List<String> matchIds) {
         List<MatchEntity> matchInfoEntities = new ArrayList<>();
         List<ParticipantEntity> participantEntities = new ArrayList<>();
         List<TeamEntity> teamEntities = new ArrayList<>();
         List<BanEntity> banEntities = new ArrayList<>();
         List<ObjectiveEntity> objectiveEntities = new ArrayList<>();
         matchIds.forEach(e -> {
+            MatchEntity entity = matchRepository.findByMatchId(e);
+            if (Objects.nonNull(entity)) {
+                return;
+            }
             Match match = matchClient.findMatchByContinentAndMatchId(continent, e);
             MatchInfo matchInfo = match.getInfo();
             MatchEntity matchEntity = new MatchEntity();
-            BeanUtils.copyProperties(match.getInfo(), matchEntity);
+            BeanUtils.copyProperties(matchInfo, matchEntity);
             matchEntity.fill(match.getMetadata());
             matchInfoEntities.add(matchEntity);
             List<ParticipantEntity> participantEntityList = matchInfo.getParticipants().stream().map(a -> {

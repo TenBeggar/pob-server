@@ -1,6 +1,5 @@
 package com.tenbeggar.pob.riot;
 
-import com.tenbeggar.pob.properties.Continent;
 import com.tenbeggar.pob.riot.domain.Match;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Repository;
@@ -18,7 +17,7 @@ public class MatchClient {
     private static final String MATCH_BY_CONTINENT_MATCHID = "https://{continent}.api.riotgames.com/lol/match/v5/matches/{matchId}";
     private static final String MATCH_TIMELINE_BY_CONTINENT_MATCHID = "https://{continent}.api.riotgames.com/lol/match/v5/matches/{matchId}/timeline";
 
-    public List<String> findAllMatchIdByContinentAndPuuid(Continent continent, String puuid, Long startTime, Long endTime, Integer start, Integer count) {
+    public List<String> findAllMatchIdByContinentAndPuuid(String continent, String puuid, Long startTime, Long endTime, Integer start, Integer count) {
         Object st = startTime;
         if (startTime == null || startTime <= 0) {
             st = "";
@@ -26,11 +25,11 @@ public class MatchClient {
         return restTemplate.getForObject(MATCHID_BY_CONTINENT_PUUID, List.class, continent, puuid, st, endTime, start, count);
     }
 
-    public Match findMatchByContinentAndMatchId(Continent continent, String matchId) {
+    public Match findMatchByContinentAndMatchId(String continent, String matchId) {
         return restTemplate.getForObject(MATCH_BY_CONTINENT_MATCHID, Match.class, continent, matchId);
     }
 
-    public String findMatchTimelineByContinentAndMatchId(Continent continent, String matchId) {
+    public String findMatchTimelineByContinentAndMatchId(String continent, String matchId) {
         return restTemplate.getForObject(MATCH_TIMELINE_BY_CONTINENT_MATCHID, String.class, continent, matchId);
     }
 }
