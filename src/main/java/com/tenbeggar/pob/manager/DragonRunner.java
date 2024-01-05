@@ -34,8 +34,8 @@ public class DragonRunner implements ApplicationRunner {
     @Transactional
     @Override
     public void run(ApplicationArguments args) {
-        StopWatch stopWatch = new StopWatch();
         log.info("POB启动中...");
+        StopWatch stopWatch = new StopWatch();
         stopWatch.start("《英雄联盟》获取最新版本");
         List<String> versions = dragonClient.allVersions();
         if (CollectionUtils.isEmpty(versions)) {
@@ -51,6 +51,7 @@ public class DragonRunner implements ApplicationRunner {
         HistoryVersionEntity historyVersionEntity = historyVersionRepository.findAllByVersionAndLanguage(latestVersion, language);
         if (Objects.isNull(historyVersionEntity)) {
             dragonService.syncChampion(latestVersion, language);
+            dragonService.syncSummonerSpell(latestVersion, language);
             historyVersionRepository.save(HistoryVersionEntity.builder().version(latestVersion).language(language).build());
         }
         stopWatch.stop();
@@ -58,7 +59,7 @@ public class DragonRunner implements ApplicationRunner {
         dragonService.setCurrentVersion(latestVersion);
         dragonService.setChampionMap(latestVersion);
         stopWatch.stop();
-        log.info("POB启动完成");
         log.info(stopWatch.prettyPrint());
+        log.info("POB启动完成");
     }
 }

@@ -17,9 +17,9 @@ public class ChampionStats {
     private Integer spellblock;//基础魔法抗性
     private Float spellblockperlevel;//每级获得魔法抗性
     private Integer attackrange;//攻击距离
-    private Integer hpregen;//每秒生命回复
+    private Float hpregen;//每秒生命回复
     private Float hpregenperlevel;//每级获得生命回复
-    private Integer mpregen;//每秒魔法回复
+    private Float mpregen;//每秒魔法回复
     private Float mpregenperlevel;//每级获得魔法回复
     private Integer crit;//
     private Float critperlevel;

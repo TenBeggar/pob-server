@@ -62,7 +62,10 @@ public class ChampionEntity extends BaseEntity {
      */
     private String enemytips;
 
-//    private List<String> tags;//英雄定位 todo ：Fighter.战士 Mage.法师 Tank.坦克 Assassin.刺客
+    /**
+     * 英雄定位：Fighter.战士 Tank.坦克 Mage.法师 Assassin.刺客 Marksman.射手 Support.辅助
+     */
+    private String tags;
 
     /**
      * 剑意 护盾 勇气 猩红冲刺 能量 法力 热量 怒气 残暴 鲜血魔井 豪意 无

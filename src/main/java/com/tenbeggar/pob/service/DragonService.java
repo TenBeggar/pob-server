@@ -5,12 +5,12 @@ import com.tenbeggar.pob.repository.*;
 import com.tenbeggar.pob.riot.DragonClient;
 import com.tenbeggar.pob.riot.RiotProperties;
 import com.tenbeggar.pob.riot.domain.Champion;
-import com.tenbeggar.pob.riot.domain.ChampionMeta;
+import com.tenbeggar.pob.riot.domain.ChampionData;
+import com.tenbeggar.pob.riot.domain.SummonerSpellData;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,6 +36,8 @@ public class DragonService {
     private ChampionStatsRepository championStatsRepository;
     @Resource
     private ChampionSkinRepository championSkinRepository;
+    @Resource
+    private SummonerSpellRepository summonerSpellRepository;
 
     public void setCurrentVersion(String currentVersion) {
         this.currentVersion = currentVersion;
@@ -65,14 +67,14 @@ public class DragonService {
         List<ChampionSpellEntity> championSpellEntities = new ArrayList<>();
         List<ChampionStatsEntity> championStatsEntities = new ArrayList<>();
         List<ChampionSkinEntity> championSkinEntities = new ArrayList<>();
-        ChampionMeta champions = dragonClient.champions(version, language);
+        ChampionData champions = dragonClient.allChampions(version, language);
         champions.getData().forEach((k, v) -> {
             ChampionEntity championEntity = championRepository.findByIdAndVersionAndLanguage(Integer.valueOf(v.getKey()), version, language);
             if (Objects.nonNull(championEntity)) {
                 return;
             }
-            ChampionMeta championMeta = dragonClient.champion(version, language, k);
-            Champion champion = championMeta.getData().get(k);
+            ChampionData championData = dragonClient.champion(version, language, k);
+            Champion champion = championData.getData().get(k);
             championEntity = champion.toEntity(version, language);
             championEntities.add(championEntity);
             Integer championId = championEntity.getId();
@@ -92,8 +94,22 @@ public class DragonService {
         championSkinRepository.saveAll(championSkinEntities);
     }
 
+    @Transactional
+    public void syncSummonerSpell(String version, String language) {
+        List<SummonerSpellEntity> summonerSpellEntities = new ArrayList<>();
+        SummonerSpellData summonerSpellData = dragonClient.allSummonerSpells(version, language);
+        summonerSpellData.getData().forEach((k, v) -> {
+            SummonerSpellEntity summonerSpellEntity = summonerSpellRepository.findByIdAndVersionAndLanguage(Integer.valueOf(v.getKey()), version, language);
+            if (Objects.nonNull(summonerSpellEntity)) {
+                return;
+            }
+            summonerSpellEntity = v.toEntity(version, language);
+            summonerSpellEntities.add(summonerSpellEntity);
+        });
+        summonerSpellRepository.saveAll(summonerSpellEntities);
+    }
+
     public String downloadDataDragon(String version) {
-        Path path = Path.of(System.getProperty("user.dir"), riotProperties.getDragonPath());
-        return dragonClient.downloadDataDragon(version, path.toString());
+        return dragonClient.downloadDataDragon(version);
     }
 }

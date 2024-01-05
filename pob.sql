@@ -26,6 +26,7 @@ CREATE TABLE champion
     partype     varchar(32) NULL,
     recommended varchar(1000) NULL,
     score       varchar(1000) NULL,
+    tags        varchar(128) NULL,
     title       varchar(32) NULL,
     "version"   varchar(32) NULL,
     CONSTRAINT champion_pkey PRIMARY KEY (pob_id),
@@ -67,8 +68,10 @@ CREATE TABLE champion_spell
     id            varchar(32) NULL,
     image         varchar(64) NULL,
     "language"    varchar(8) NULL,
+    maxammo       varchar(8) NULL,
+    maxrank       int4 NULL,
     "name"        varchar(32) NULL,
-    tooltip       varchar(1000) NULL,
+    range_burn    varchar(32) NULL,
     "version"     varchar(32) NULL,
     CONSTRAINT champion_spell_pkey PRIMARY KEY (pob_id)
 );
@@ -88,13 +91,13 @@ CREATE TABLE champion_stats
     critperlevel         float4 NULL,
     hp                   int4 NULL,
     hpperlevel           float4 NULL,
-    hpregen              int4 NULL,
+    hpregen              float4 NULL,
     hpregenperlevel      float4 NULL,
     "language"           varchar(8) NULL,
     movespeed            int4 NULL,
     mp                   int4 NULL,
     mpperlevel           float4 NULL,
-    mpregen              int4 NULL,
+    mpregen              float4 NULL,
     mpregenperlevel      float4 NULL,
     spellblock           int4 NULL,
     spellblockperlevel   float4 NULL,
@@ -332,6 +335,27 @@ CREATE TABLE summoner_match
     puuid    varchar(128) NULL,
     CONSTRAINT summoner_match_pkey PRIMARY KEY (pob_id),
     CONSTRAINT summoner_match_puuid_match_id_unique UNIQUE (puuid, match_id)
+);
+
+CREATE TABLE summoner_spell
+(
+    pob_id         varchar(18) NOT NULL,
+    cooldown_burn  varchar(32) NULL,
+    cost_burn      varchar(32) NULL,
+    cost_type      varchar(32) NULL,
+    description    varchar(1000) NULL,
+    en_id          varchar(32) NULL,
+    id             int4 NULL,
+    image          varchar(64) NULL,
+    "language"     varchar(8) NULL,
+    modes          varchar(1000) NULL,
+    maxammo        varchar(8) NULL,
+    maxrank        int4 NULL,
+    "name"         varchar(32) NULL,
+    range_burn     varchar(32) NULL,
+    summoner_level int4 NULL,
+    "version"      varchar(32) NULL,
+    CONSTRAINT summoner_spell_pkey PRIMARY KEY (pob_id)
 );
 
 CREATE TABLE team

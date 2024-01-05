@@ -4,20 +4,32 @@ import com.tenbeggar.pob.entity.ChampionSpellEntity;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
+import java.util.List;
+
 @Data
 public class ChampionSpell {
 
     private String id;//技能id
     private String name;//技能名
     private String description;//技能介绍
-    private String tooltip;//技能详情
 
     private String cooldownBurn;//冷却时间
-    private String costBurn;//法力消耗
+    private String costBurn;//技能消耗
+    private String rangeBurn;//技能范围
+
+    private Integer maxrank;//可升级次数
+    private String maxammo;//充能次数
 
     private Image image;//技能图标
 
-    //TODO
+
+    private String tooltip;//技能详情
+    private String costType;//消耗类型
+    private Object leveltip;
+    private Object datavalues;
+    private List<String> effectBurn;
+    private List<String> vars;
+    private String resource;
 
     public ChampionSpellEntity toEntity(Integer championId, String version, String language) {
         ChampionSpellEntity championSpellEntity = new ChampionSpellEntity();

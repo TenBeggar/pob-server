@@ -6,26 +6,31 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 英雄技能
+ * 召唤师技能
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "champion_spell")
-public class ChampionSpellEntity extends BaseEntity {
+@Table(name = "summoner_spell")
+public class SummonerSpellEntity extends BaseEntity {
 
     /**
-     * 技能id
+     * 英雄id
      */
-    private String id;
+    private Integer id;
 
     /**
-     * 技能名
+     * 英文id
+     */
+    private String enId;
+
+    /**
+     * 名字
      */
     private String name;
 
     /**
-     * 技能介绍
+     * 技能描述
      */
     private String description;
 
@@ -40,17 +45,32 @@ public class ChampionSpellEntity extends BaseEntity {
     private String costBurn;
 
     /**
+     * 消耗类型，都为无消耗
+     */
+    private String costType;
+
+    /**
      * 技能范围
      */
     private String rangeBurn;
 
     /**
-     * 可升级次数
+     * 最低要求的召唤师等级
+     */
+    private Integer summonerLevel;
+
+    /**
+     * 支持的游戏模式，GameMode枚举的子集
+     */
+    private String modes;
+
+    /**
+     * 可升级次数，都为1
      */
     private Integer maxrank;
 
     /**
-     * 充能次数
+     * 填充次数，除了惩戒为2，其余都为-1
      */
     private String maxammo;
 
@@ -58,11 +78,6 @@ public class ChampionSpellEntity extends BaseEntity {
      * 技能图标
      */
     private String image;
-
-    /**
-     * 冗余字段，英雄id
-     */
-    private Integer championId;
 
     /**
      * 冗余字段，版本

@@ -67,7 +67,7 @@ public class ChampionStatsEntity extends BaseEntity {
     /**
      * 每秒生命回复
      */
-    private Integer hpregen;
+    private Float hpregen;
 
     /**
      * 每级获得生命回复
@@ -77,7 +77,7 @@ public class ChampionStatsEntity extends BaseEntity {
     /**
      * 每秒魔法回复
      */
-    private Integer mpregen;
+    private Float mpregen;
 
     /**
      * 每级获得魔法回复

@@ -1,8 +1,10 @@
 package com.tenbeggar.pob.riot;
 
-import com.tenbeggar.pob.entity.SummonerMatchEntity;
+import com.tenbeggar.pob.entity.*;
 import com.tenbeggar.pob.enums.Continent;
 import com.tenbeggar.pob.repository.SummonerMatchRepository;
+import com.tenbeggar.pob.riot.domain.Champion;
+import com.tenbeggar.pob.riot.domain.ChampionData;
 import com.tenbeggar.pob.riot.domain.Match;
 import com.tenbeggar.pob.service.DragonService;
 import jakarta.annotation.Resource;
@@ -17,7 +19,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.ZonedDateTime;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 public class APITest {
@@ -67,5 +70,21 @@ public class APITest {
     @Test
     void champions() {
         dragonService.syncChampion("13.24.1", "zh_CN");
+    }
+
+    @Resource
+    private DragonClient dragonClient;
+
+    @Test
+    void tags() {
+        Set<String> set = new HashSet<>();
+        ChampionData champions = dragonClient.allChampions("13.24.1", "zh_CN");
+        champions.getData().forEach((k, v) -> {
+            ChampionData championData = dragonClient.champion("13.24.1", "zh_CN", k);
+            set.addAll(championData.getData().get(k).getTags());
+        });
+        System.out.println("==========");
+        System.out.println(set);
+        System.out.println("==========");
     }
 }
