@@ -4,6 +4,9 @@ import com.tenbeggar.pob.entity.ChampionPassiveEntity;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
+/**
+ * 英雄被动技能
+ */
 @Data
 public class ChampionPassive {
 

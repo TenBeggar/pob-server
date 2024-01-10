@@ -7,7 +7,7 @@ import java.util.Map;
 @Data
 public class SummonerSpellData {
 
-    private String type;
-    private String version;
-    private Map<String, SummonerSpell> data;
+    private String type;//类型
+    private String version;//版本
+    private Map<String, SummonerSpell> data;//召唤师技能数据
 }

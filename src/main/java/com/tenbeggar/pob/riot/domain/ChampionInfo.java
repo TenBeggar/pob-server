@@ -2,6 +2,9 @@ package com.tenbeggar.pob.riot.domain;
 
 import lombok.Data;
 
+/**
+ * 英雄评分
+ */
 @Data
 public class ChampionInfo {
 

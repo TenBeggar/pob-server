@@ -1,6 +1,9 @@
 package com.tenbeggar.pob.riot.domain;
 
+import com.tenbeggar.pob.entity.MatchEntity;
+import com.tenbeggar.pob.entity.ParticipantEntity;
 import lombok.Data;
+import org.springframework.beans.BeanUtils;
 
 /**
  * 选手信息
@@ -190,5 +193,15 @@ public class Participant {
 
     //    private Mission missions;//TODO
 //    private Challenge challenges;//勋章
-    private Perk perks;//天赋选择
+    private ParticipantPerk perks;//符文选择
+
+    public ParticipantEntity toEntity(MatchEntity matchEntity) {
+        ParticipantEntity participantEntity = new ParticipantEntity();
+        BeanUtils.copyProperties(this, participantEntity);
+        participantEntity.setMatchId(matchEntity.getMatchId());
+        participantEntity.setGameVersion(matchEntity.getGameVersion());
+        participantEntity.setGameCreation(matchEntity.getGameCreation());
+        participantEntity.setQueueId(matchEntity.getQueueId());
+        return participantEntity;
+    }
 }

@@ -6,6 +6,9 @@ import org.springframework.beans.BeanUtils;
 
 import java.util.List;
 
+/**
+ * 英雄主动技能
+ */
 @Data
 public class ChampionSpell {
 
@@ -22,7 +25,7 @@ public class ChampionSpell {
 
     private Image image;//技能图标
 
-
+    //TODO 尚未理解
     private String tooltip;//技能详情
     private String costType;//消耗类型
     private Object leveltip;

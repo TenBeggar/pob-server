@@ -7,8 +7,8 @@ import lombok.Data;
 @Data
 public class BanVO {
 
-    @Schema(description = "英雄头像文件名")
-    private String championImage;
+    @Schema(description = "英雄头像uri")
+    private String championIcon;
     @Schema(description = "英雄id")
     private Integer championId;
     @Schema(description = "禁选回合")

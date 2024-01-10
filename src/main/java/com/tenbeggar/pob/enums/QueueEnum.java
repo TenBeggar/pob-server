@@ -8,8 +8,9 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum Queue {
+public enum QueueEnum {
 
+    //注意：官方有87种对局类型，这里去除了已废弃的类型只剩下54种
     CUSTOM(0, "召唤师峡谷|嚎哭深渊", "自定义模式"),
     HOWLING_ABYSS_1V1(72, "嚎哭深渊", "嚎哭深渊1V1模式"),
     HOWLING_ABYSS_2V2(73, "嚎哭深渊", "嚎哭深渊2V2模式"),
@@ -67,7 +68,7 @@ public enum Queue {
     ;
 
     private final int id;
-    private final String map;
+    private final String name;
     private final String description;
 }
  

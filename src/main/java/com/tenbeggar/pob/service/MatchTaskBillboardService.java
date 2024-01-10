@@ -2,7 +2,7 @@ package com.tenbeggar.pob.service;
 
 import com.tenbeggar.pob.entity.MatchTaskBillboardEntity;
 import com.tenbeggar.pob.entity.MatchTaskEntity;
-import com.tenbeggar.pob.enums.TaskStatus;
+import com.tenbeggar.pob.enums.TaskStatusEnum;
 import com.tenbeggar.pob.manager.MatchTaskEvent;
 import com.tenbeggar.pob.repository.MatchTaskBillboardRepository;
 import com.tenbeggar.pob.repository.MatchTaskRepository;
@@ -63,7 +63,7 @@ public class MatchTaskBillboardService {
                 .continent(matchTaskBillboardEntity.getContinent()).puuid(matchTaskBillboardEntity.getPuuid())
                 .startTime(matchTaskBillboardEntity.getStartTime()).endTime(matchTaskBillboardEntity.getEndTime())
                 .start(START_PAGE).count(DEFAULT_COUNT)
-                .status(TaskStatus.NONE).retryCount(0).build();
+                .status(TaskStatusEnum.NONE).retryCount(0).build();
     }
 
     /**
@@ -74,15 +74,15 @@ public class MatchTaskBillboardService {
                 .continent(matchTaskEntity.getContinent()).puuid(matchTaskEntity.getPuuid())
                 .startTime(matchTaskEntity.getStartTime()).endTime(matchTaskEntity.getEndTime())
                 .start(matchTaskEntity.getStart() + matchTaskEntity.getCount()).count(matchTaskEntity.getCount())
-                .status(TaskStatus.NONE).retryCount(0).build();
+                .status(TaskStatusEnum.NONE).retryCount(0).build();
         matchTaskRepository.save(nextMatchTaskEntity);
     }
 
     /**
      * 找到一个未完成的任务
      */
-    public MatchTaskEntity firstMatchTaskByStatus(TaskStatus taskStatus) {
-        return matchTaskRepository.findFirstByStatus(taskStatus);
+    public MatchTaskEntity firstMatchTaskByStatus(TaskStatusEnum taskStatusEnum) {
+        return matchTaskRepository.findFirstByStatus(taskStatusEnum);
     }
 
     /**

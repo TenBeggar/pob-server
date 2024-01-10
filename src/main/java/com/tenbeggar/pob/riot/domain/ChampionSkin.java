@@ -4,6 +4,9 @@ import com.tenbeggar.pob.entity.ChampionSkinEntity;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
+/**
+ * 英雄皮肤
+ */
 @Data
 public class ChampionSkin {
 

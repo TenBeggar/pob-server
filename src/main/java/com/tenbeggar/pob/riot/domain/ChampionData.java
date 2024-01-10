@@ -7,8 +7,8 @@ import java.util.Map;
 @Data
 public class ChampionData {
 
-    private String type;
+    private String type;//类型
     private String format;
-    private String version;
-    private Map<String, Champion> data;
+    private String version;//版本
+    private Map<String, Champion> data;//英雄数据
 }

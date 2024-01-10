@@ -6,6 +6,9 @@ import org.springframework.beans.BeanUtils;
 
 import java.util.List;
 
+/**
+ * 召唤师技能
+ */
 @Data
 public class SummonerSpell {
 

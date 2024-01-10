@@ -313,6 +313,21 @@ CREATE TABLE participant
     CONSTRAINT participant_pkey PRIMARY KEY (pob_id)
 );
 
+CREATE TABLE participant_perk
+(
+    pob_id         varchar(18) NOT NULL,
+    perk_id        int4 NULL,
+    description    varchar(32) NULL,
+    match_id       varchar(32) NULL,
+    participant_id int4 NULL,
+    champion_id    int4 NULL,
+    game_creation  int8 NULL,
+    game_version   varchar(32) NULL,
+    queue_id       int4 NULL,
+    win            bool NULL,
+    CONSTRAINT participant_perk_pkey PRIMARY KEY (pob_id)
+);
+
 CREATE TABLE summoner
 (
     pob_id          varchar(18) NOT NULL,
@@ -355,7 +370,8 @@ CREATE TABLE summoner_spell
     range_burn     varchar(32) NULL,
     summoner_level int4 NULL,
     "version"      varchar(32) NULL,
-    CONSTRAINT summoner_spell_pkey PRIMARY KEY (pob_id)
+    CONSTRAINT summoner_spell_pkey PRIMARY KEY (pob_id),
+    CONSTRAINT summoner_spell_id_version_language_unique UNIQUE (id, version, language)
 );
 
 CREATE TABLE team
@@ -368,4 +384,90 @@ CREATE TABLE team
     team_id       int4 NULL,
     win           bool NULL,
     CONSTRAINT team_pkey PRIMARY KEY (pob_id)
+);
+
+CREATE TABLE game_mode
+(
+    pob_id      varchar(18) NOT NULL,
+    game_mode   varchar(32) NULL,
+    description varchar(128) NULL,
+    CONSTRAINT game_mode_pkey PRIMARY KEY (pob_id),
+    CONSTRAINT game_mode_game_mode_unique UNIQUE (game_mode)
+);
+
+CREATE TABLE game_type
+(
+    pob_id      varchar(18) NOT NULL,
+    gametype    varchar(32) NULL,
+    description varchar(128) NULL,
+    CONSTRAINT game_type_pkey PRIMARY KEY (pob_id),
+    CONSTRAINT game_type_gametype_unique UNIQUE (gametype)
+);
+
+CREATE TABLE map
+(
+    pob_id   varchar(18) NOT NULL,
+    map_id   int4 NULL,
+    map_name varchar(128) NULL,
+    notes    varchar(128) NULL,
+    CONSTRAINT map_pkey PRIMARY KEY (pob_id),
+    CONSTRAINT map_map_id_unique UNIQUE (map_id)
+);
+
+CREATE TABLE queue
+(
+    pob_id      varchar(18) NOT NULL,
+    queue_id    int4 NULL,
+    map         varchar(128) NULL,
+    description varchar(128) NULL,
+    notes       varchar(128) NULL,
+    CONSTRAINT queue_pkey PRIMARY KEY (pob_id),
+    CONSTRAINT queue_queue_id_unique UNIQUE (queue_id)
+);
+
+CREATE TABLE perk
+(
+    pob_id     varchar(18) NOT NULL,
+    id         int4 NULL,
+    parent_id  int4 NULL,
+    en_id      varchar(32) NULL,
+    name       varchar(32) NULL,
+    icon       varchar(128) NULL,
+    short_desc varchar(1000) NULL,
+    long_desc  varchar(1000) NULL,
+    "version"  varchar(32) NULL,
+    "language" varchar(8) NULL,
+    CONSTRAINT perk_pkey PRIMARY KEY (pob_id),
+    CONSTRAINT perk_id_version_language_unique UNIQUE (id, version, language)
+);
+
+CREATE TABLE item
+(
+    pob_id            varchar(18) NOT NULL,
+    base              int4 NULL,
+    "change"          varchar(128) NULL,
+    consume_on_full   bool NULL,
+    consumed          bool NULL,
+    "depth"           int4 NULL,
+    description       varchar(1000) NULL,
+    hide_from_all     bool NULL,
+    id                int4 NULL,
+    image             varchar(128) NULL,
+    in_store          bool NULL,
+    "language"        varchar(8) NULL,
+    maps              varchar(128) NULL,
+    "name"            varchar(128) NULL,
+    need              varchar(128) NULL,
+    plaintext         varchar(1000) NULL,
+    purchasable       bool NULL,
+    required_ally     varchar(32) NULL,
+    required_champion varchar(32) NULL,
+    sell              int4 NULL,
+    special_recipe    int4 NULL,
+    stacks            int4 NULL,
+    tags              varchar(255) NULL,
+    total             int4 NULL,
+    "version"         varchar(32) NULL,
+    CONSTRAINT item_pkey PRIMARY KEY (pob_id),
+    CONSTRAINT item_id_version_language_unique UNIQUE (id, version, language)
 );

@@ -213,14 +213,4 @@ public class ParticipantEntity extends BaseEntity {
      * 冗余字段，对局类型id
      */
     public Integer queueId;
-
-    /**
-     * 填充冗余字段
-     */
-    public void fill(MatchEntity matchEntity) {
-        this.setMatchId(matchEntity.getMatchId());
-        this.setGameVersion(matchEntity.getGameVersion());
-        this.setGameCreation(matchEntity.getGameCreation());
-        this.setQueueId(matchEntity.getQueueId());
-    }
 }

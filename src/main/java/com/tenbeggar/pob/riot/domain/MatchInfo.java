@@ -1,6 +1,8 @@
 package com.tenbeggar.pob.riot.domain;
 
+import com.tenbeggar.pob.entity.MatchEntity;
 import lombok.Data;
+import org.springframework.beans.BeanUtils;
 
 import java.util.List;
 
@@ -84,4 +86,12 @@ public class MatchInfo {
      * 选手信息
      */
     public List<Participant> participants;
+
+    public MatchEntity toEntity(MatchMetadata metadata) {
+        MatchEntity matchEntity = new MatchEntity();
+        BeanUtils.copyProperties(this, matchEntity);
+        matchEntity.setMatchId(metadata.getMatchId());
+        matchEntity.setDataVersion(metadata.getDataVersion());
+        return matchEntity;
+    }
 }

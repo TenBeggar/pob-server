@@ -48,15 +48,4 @@ public class BanEntity extends BaseEntity {
      * 冗余字段，对局类型id
      */
     public Integer queueId;
-
-    /**
-     * 填充冗余字段
-     */
-    public void fill(TeamEntity teamEntity) {
-        this.setMatchId(teamEntity.getMatchId());
-        this.setTeamId(teamEntity.getTeamId());
-        this.setGameVersion(teamEntity.getGameVersion());
-        this.setGameCreation(teamEntity.getGameCreation());
-        this.setQueueId(teamEntity.getQueueId());
-    }
 }

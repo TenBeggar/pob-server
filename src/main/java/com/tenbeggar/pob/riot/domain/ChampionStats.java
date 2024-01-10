@@ -4,6 +4,9 @@ import com.tenbeggar.pob.entity.ChampionStatsEntity;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
+/**
+ * 英雄基础属性
+ */
 @Data
 public class ChampionStats {
 

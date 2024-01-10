@@ -37,9 +37,9 @@ public class DragonRunner implements ApplicationRunner {
         log.info("POB启动中...");
         StopWatch stopWatch = new StopWatch();
         stopWatch.start("《英雄联盟》获取最新版本");
-        List<String> versions = dragonClient.allVersions();
+        List<String> versions = dragonClient.allVersion();
         if (CollectionUtils.isEmpty(versions)) {
-            throw new RuntimeException("获取LOL所有版本失败");
+            throw new RuntimeException("Request LOL version failed");
         }
         String latestVersion = versions.get(0);
         stopWatch.stop();
@@ -50,14 +50,12 @@ public class DragonRunner implements ApplicationRunner {
         String language = riotProperties.getLanguage();
         HistoryVersionEntity historyVersionEntity = historyVersionRepository.findAllByVersionAndLanguage(latestVersion, language);
         if (Objects.isNull(historyVersionEntity)) {
-            dragonService.syncChampion(latestVersion, language);
-            dragonService.syncSummonerSpell(latestVersion, language);
+            dragonService.syncData(latestVersion);
             historyVersionRepository.save(HistoryVersionEntity.builder().version(latestVersion).language(language).build());
         }
         stopWatch.stop();
-        stopWatch.start("《POB》缓存英雄数据");
-        dragonService.setCurrentVersion(latestVersion);
-        dragonService.setChampionMap(latestVersion);
+        stopWatch.start("《POB》缓存版本数据");
+        dragonService.setData(latestVersion);
         stopWatch.stop();
         log.info(stopWatch.prettyPrint());
         log.info("POB启动完成");

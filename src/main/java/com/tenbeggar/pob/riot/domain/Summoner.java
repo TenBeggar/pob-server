@@ -2,6 +2,9 @@ package com.tenbeggar.pob.riot.domain;
 
 import lombok.Data;
 
+/**
+ * 召唤师
+ */
 @Data
 public class Summoner {
 

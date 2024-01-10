@@ -5,6 +5,9 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.*;
 
+/**
+ * 支持过的LOL版本
+ */
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

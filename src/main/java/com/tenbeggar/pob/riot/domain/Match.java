@@ -2,9 +2,6 @@ package com.tenbeggar.pob.riot.domain;
 
 import lombok.Data;
 
-/**
- * 对局信息
- */
 @Data
 public class Match {
 

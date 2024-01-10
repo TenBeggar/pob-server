@@ -3,6 +3,8 @@ package com.tenbeggar.pob.controller.vo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.util.List;
+
 @Schema(description = "选手信息")
 @Data
 public class ParticipantVO {
@@ -158,8 +160,8 @@ public class ParticipantVO {
     private Integer visionScore;
 
     //英雄
-    @Schema(description = "英雄头像文件名")
-    private String championImage;
+    @Schema(description = "英雄头像uri")
+    private String championIcon;
     @Schema(description = "英雄id，v11.4版本之前该字段无效，需根据championName确定英雄")
     private Integer championId;
     @Schema(description = "英雄名称")
@@ -221,10 +223,15 @@ public class ParticipantVO {
     private Integer spell3Casts;
     @Schema(description = "施放R技能的次数")
     private Integer spell4Casts;
+
+    @Schema(description = "D技能图像uri")
+    private String summoner1Icon;
     @Schema(description = "施放D技能的次数")
     private Integer summoner1Casts;
     @Schema(description = "D技能id")
     private Integer summoner1Id;
+    @Schema(description = "F技能图像uri")
+    private String summoner2Icon;
     @Schema(description = "施放F技能的次数")
     private Integer summoner2Casts;
     @Schema(description = "F技能id")
@@ -304,4 +311,7 @@ public class ParticipantVO {
     private Integer visionClearedPings;
     @Schema(description = "诱饵")
     private Integer baitPings;
+
+    @Schema(description = "符文选择")
+    private List<ParticipantPerkVO> perks;
 }

@@ -5,7 +5,6 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-
 /**
  * 队伍信息
  */
@@ -44,14 +43,4 @@ public class TeamEntity extends BaseEntity {
      * 冗余字段，对局类型id
      */
     public Integer queueId;
-
-    /**
-     * 填充冗余字段
-     */
-    public void fill(MatchEntity matchEntity) {
-        this.setMatchId(matchEntity.getMatchId());
-        this.setGameVersion(matchEntity.getGameVersion());
-        this.setGameCreation(matchEntity.getGameCreation());
-        this.setQueueId(matchEntity.getQueueId());
-    }
 }

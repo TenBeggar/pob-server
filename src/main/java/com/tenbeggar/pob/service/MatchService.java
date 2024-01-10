@@ -2,12 +2,12 @@ package com.tenbeggar.pob.service;
 
 import com.tenbeggar.pob.controller.vo.*;
 import com.tenbeggar.pob.entity.*;
-import com.tenbeggar.pob.enums.ObjectiveType;
-import com.tenbeggar.pob.enums.Region;
+import com.tenbeggar.pob.enums.ObjectiveTypeEnum;
+import com.tenbeggar.pob.enums.ParticipantPerkEnum;
+import com.tenbeggar.pob.enums.RegionEnum;
 import com.tenbeggar.pob.repository.*;
 import com.tenbeggar.pob.riot.MatchClient;
-import com.tenbeggar.pob.riot.domain.Match;
-import com.tenbeggar.pob.riot.domain.MatchInfo;
+import com.tenbeggar.pob.riot.domain.*;
 import com.tenbeggar.pob.utils.PageVO;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,8 @@ public class MatchService {
     @Resource
     private ParticipantRepository participantRepository;
     @Resource
+    private ParticipantPerkRepository participantPerkRepository;
+    @Resource
     private TeamRepository teamRepository;
     @Resource
     private BanRepository banRepository;
@@ -52,8 +55,8 @@ public class MatchService {
 
     public PageVO<MatchVO> pageBySummonerPobId(String summonerPobId, Integer current, Integer size) {
         Optional<SummonerEntity> optional = summonerRepository.findById(summonerPobId);
-        SummonerEntity summonerEntity = optional.orElseThrow(() -> new RuntimeException("当前用户不存在"));
-        matchTaskBillboardService.postMatchTask(Region.toContinent(summonerEntity.getRegion()).name(), summonerEntity.getPuuid());
+        SummonerEntity summonerEntity = optional.orElseThrow(() -> new RuntimeException("Summoner not found"));
+        matchTaskBillboardService.postMatchTask(RegionEnum.toContinent(summonerEntity.getRegion()).name(), summonerEntity.getPuuid());
         Pageable pageable = PageRequest.of(current, size, Sort.by("matchId").descending());
         Page<SummonerMatchEntity> summonerMatchPage = summonerMatchRepository.findAllByPuuid(summonerEntity.getPuuid(), pageable);
         List<String> matchIds = summonerMatchPage.get().map(SummonerMatchEntity::getMatchId).collect(Collectors.toList());
@@ -70,7 +73,13 @@ public class MatchService {
             ParticipantVO participantVO = new ParticipantVO();
             BeanUtils.copyProperties(e, participantVO);
             ChampionEntity championEntity = dragonService.championById(participantVO.getChampionId());
-            participantVO.setChampionImage(championEntity.getImage());
+            participantVO.setChampionIcon(championEntity.getImage());
+            SummonerSpellEntity summoner1Spell = dragonService.summonerSpellById(participantVO.getSummoner1Id());
+            participantVO.setSummoner1Icon(summoner1Spell.getImage());
+            SummonerSpellEntity summoner2Spell = dragonService.summonerSpellById(participantVO.getSummoner2Id());
+            participantVO.setSummoner2Icon(summoner2Spell.getImage());
+            List<ParticipantPerkEntity> participantPerkEntities = participantPerkRepository.findAllByMatchIdAndParticipantId(e.getMatchId(), e.getParticipantId());
+            participantVO.setPerks(ParticipantPerkEnum.toVO(participantPerkEntities));
             return participantVO;
         }).collect(Collectors.toList());
         List<TeamEntity> teamEntities = teamRepository.findAllByMatchId(matchVO.getMatchId());
@@ -82,7 +91,7 @@ public class MatchService {
                 BanVO banVO = new BanVO();
                 BeanUtils.copyProperties(a, banVO);
                 ChampionEntity championEntity = dragonService.championById(banVO.getChampionId());
-                banVO.setChampionImage(championEntity.getImage());
+                banVO.setChampionIcon(championEntity.getImage());
                 return banVO;
             }).collect(Collectors.toList());
             List<ObjectiveEntity> objectiveEntities = objectiveRepository.findAllByMatchIdAndTeamId(e.getMatchId(), teamVO.getTeamId());
@@ -102,8 +111,9 @@ public class MatchService {
 
     @Transactional
     public void saveAllByContinentAndMatchIds(String continent, List<String> matchIds) {
-        List<MatchEntity> matchInfoEntities = new ArrayList<>();
+        List<MatchEntity> matchEntities = new ArrayList<>();
         List<ParticipantEntity> participantEntities = new ArrayList<>();
+        List<ParticipantPerkEntity> participantPerkEntities = new ArrayList<>();
         List<TeamEntity> teamEntities = new ArrayList<>();
         List<BanEntity> banEntities = new ArrayList<>();
         List<ObjectiveEntity> objectiveEntities = new ArrayList<>();
@@ -112,39 +122,58 @@ public class MatchService {
             if (Objects.nonNull(entity)) {
                 return;
             }
+            //对局
             Match match = matchClient.findMatchByContinentAndMatchId(continent, e);
             MatchInfo matchInfo = match.getInfo();
-            MatchEntity matchEntity = new MatchEntity();
-            BeanUtils.copyProperties(matchInfo, matchEntity);
-            matchEntity.fill(match.getMetadata());
-            matchInfoEntities.add(matchEntity);
+            MatchEntity matchEntity = matchInfo.toEntity(match.getMetadata());
+            matchEntities.add(matchEntity);
+            //参与者
             List<ParticipantEntity> participantEntityList = matchInfo.getParticipants().stream().map(a -> {
-                ParticipantEntity participantEntity = new ParticipantEntity();
-                BeanUtils.copyProperties(a, participantEntity);
-                participantEntity.fill(matchEntity);
+                ParticipantEntity participantEntity = a.toEntity(matchEntity);
+                //符文选择
+                ParticipantPerk perks = a.getPerks();
+                if (Objects.nonNull(perks)) {
+                    List<ParticipantPerkEntity> participantPerkEntityList = perks.toEntity(participantEntity);
+                    participantPerkEntities.addAll(participantPerkEntityList);
+                }
                 return participantEntity;
             }).collect(Collectors.toList());
             participantEntities.addAll(participantEntityList);
+            //队伍
             matchInfo.getTeams().forEach(a -> {
-                TeamEntity teamEntity = new TeamEntity();
-                BeanUtils.copyProperties(a, teamEntity);
-                teamEntity.fill(matchEntity);
+                TeamEntity teamEntity = a.toEntity(matchEntity);
                 teamEntities.add(teamEntity);
-                List<BanEntity> banEntityList = a.getBans().stream().map(o -> {
-                    BanEntity banEntity = new BanEntity();
-                    BeanUtils.copyProperties(o, banEntity);
-                    banEntity.fill(teamEntity);
-                    return banEntity;
-                }).collect(Collectors.toList());
-                banEntities.addAll(banEntityList);
-                List<ObjectiveEntity> objectiveEntityList = ObjectiveType.objectivesToEntities(a.getObjectives(), teamEntity);
-                objectiveEntities.addAll(objectiveEntityList);
+                //禁用英雄
+                List<Ban> bans = a.getBans();
+                if (!CollectionUtils.isEmpty(bans)) {
+                    List<BanEntity> banEntityList = bans.stream().map(o -> o.toEntity(teamEntity)).collect(Collectors.toList());
+                    banEntities.addAll(banEntityList);
+                }
+                //击杀目标
+                Objectives objectives = a.getObjectives();
+                if (Objects.nonNull(objectives)) {
+                    List<ObjectiveEntity> objectiveEntityList = ObjectiveTypeEnum.objectivesToEntities(objectives, teamEntity);
+                    objectiveEntities.addAll(objectiveEntityList);
+                }
             });
         });
-        matchRepository.saveAll(matchInfoEntities);
+        matchRepository.saveAll(matchEntities);
         participantRepository.saveAll(participantEntities);
+        participantPerkRepository.saveAll(participantPerkEntities);
         teamRepository.saveAll(teamEntities);
         banRepository.saveAll(banEntities);
         objectiveRepository.saveAll(objectiveEntities);
+    }
+
+    public List<ChampionRateVO> useChampion(String summonerPobId, Integer top) {
+        Optional<SummonerEntity> optional = summonerRepository.findById(summonerPobId);
+        SummonerEntity summonerEntity = optional.orElseThrow(() -> new RuntimeException("Summoner not found"));
+        return participantRepository.useChampion(summonerEntity.getPuuid(), top);
+    }
+
+    public List<ChampionRateVO> winChampion(String summonerPobId, Integer top) {
+        Optional<SummonerEntity> optional = summonerRepository.findById(summonerPobId);
+        SummonerEntity summonerEntity = optional.orElseThrow(() -> new RuntimeException("Summoner not found"));
+        return participantRepository.winChampion(summonerEntity.getPuuid(), top);
     }
 }

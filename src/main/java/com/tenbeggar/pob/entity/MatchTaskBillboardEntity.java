@@ -4,6 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
 
+/**
+ * 同步LOL数据的任务公告栏
+ */
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

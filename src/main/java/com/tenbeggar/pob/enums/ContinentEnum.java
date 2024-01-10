@@ -3,7 +3,7 @@ package com.tenbeggar.pob.enums;
 /**
  * 州
  */
-public enum Continent {
+public enum ContinentEnum {
 
     /**
      * 美洲：NA, BR, LAN, LAS

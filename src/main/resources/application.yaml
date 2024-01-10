@@ -22,7 +22,7 @@ clock:
 
 riot:
   # Riot 开发者门户为第三方提供的 API key
-  token: RGAPI-9e6e36bb-e72a-4649-92e2-022aa4ec787b
+  token: RGAPI-5c00db96-afcd-4e81-83b5-1d34fcf12df8
   # 设置语言
   language: zh_CN
   # LOL 静态数据存放路径

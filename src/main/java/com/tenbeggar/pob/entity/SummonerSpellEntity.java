@@ -2,6 +2,7 @@ package com.tenbeggar.pob.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,7 +12,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "summoner_spell")
+@Table(name = "summoner_spell", uniqueConstraints = @UniqueConstraint(columnNames = {"id", "version", "language"}))
 public class SummonerSpellEntity extends BaseEntity {
 
     /**

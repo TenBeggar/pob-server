@@ -1,12 +1,15 @@
 package com.tenbeggar.pob.entity;
 
-import com.tenbeggar.pob.enums.TaskStatus;
+import com.tenbeggar.pob.enums.TaskStatusEnum;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.*;
 
+/**
+ * 同步LOL数据的具体任务
+ */
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -50,7 +53,7 @@ public class MatchTaskEntity extends BaseEntity {
      * 同步状态
      */
     @Enumerated(value = EnumType.STRING)
-    private TaskStatus status;
+    private TaskStatusEnum status;
 
     /**
      * 失败重试次数

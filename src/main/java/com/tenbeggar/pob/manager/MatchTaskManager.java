@@ -2,7 +2,7 @@ package com.tenbeggar.pob.manager;
 
 import com.tenbeggar.pob.entity.MatchTaskEntity;
 import com.tenbeggar.pob.entity.SummonerMatchEntity;
-import com.tenbeggar.pob.enums.TaskStatus;
+import com.tenbeggar.pob.enums.TaskStatusEnum;
 import com.tenbeggar.pob.repository.SummonerMatchRepository;
 import com.tenbeggar.pob.riot.MatchClient;
 import com.tenbeggar.pob.service.MatchService;
@@ -40,13 +40,19 @@ public class MatchTaskManager {
 
     @Scheduled(fixedDelayString = "${clock.delay.match}")
     public void noneMatch() {
-        MatchTaskEntity matchTaskEntity = matchTaskBillboardService.firstMatchTaskByStatus(TaskStatus.NONE);
+        MatchTaskEntity matchTaskEntity = matchTaskBillboardService.firstMatchTaskByStatus(TaskStatusEnum.NONE);
+        if (Objects.isNull(matchTaskEntity)) {
+            return;
+        }
         applicationEventPublisher.publishEvent(new MatchTaskEvent(this, matchTaskEntity));
     }
 
     @Scheduled(fixedDelayString = "${clock.delay.retry-match}")
     public void retryMatch() {
-        MatchTaskEntity matchTaskEntity = matchTaskBillboardService.firstMatchTaskByStatus(TaskStatus.FAIL);
+        MatchTaskEntity matchTaskEntity = matchTaskBillboardService.firstMatchTaskByStatus(TaskStatusEnum.FAIL);
+        if (Objects.isNull(matchTaskEntity)) {
+            return;
+        }
         applicationEventPublisher.publishEvent(new MatchTaskEvent(this, matchTaskEntity));
     }
 
@@ -62,9 +68,9 @@ public class MatchTaskManager {
         List<String> matchIds = null;
         try {
             matchIds = matchClient.findAllMatchIdByContinentAndPuuid(continent, puuid, matchTaskEntity.getStartTime(), matchTaskEntity.getEndTime(), matchTaskEntity.getStart(), matchTaskEntity.getCount());
-            matchTaskEntity.setStatus(TaskStatus.SUCCESS);
+            matchTaskEntity.setStatus(TaskStatusEnum.SUCCESS);
         } catch (Exception e) {
-            matchTaskEntity.setStatus(TaskStatus.FAIL);
+            matchTaskEntity.setStatus(TaskStatusEnum.FAIL);
             matchTaskEntity.setRetryCount(matchTaskEntity.getRetryCount() + 1);
             log.error("matchTask : {}\nerror : {}", matchTaskEntity, e.getMessage());
         }

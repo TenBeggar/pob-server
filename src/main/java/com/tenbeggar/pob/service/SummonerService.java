@@ -36,7 +36,7 @@ public class SummonerService {
 
     public SummonerVO refreshByPobId(String pobId) {
         Optional<SummonerEntity> optional = summonerRepository.findById(pobId);
-        SummonerEntity summonerEntity = optional.orElseThrow(() -> new RuntimeException("当前用户不存在"));
+        SummonerEntity summonerEntity = optional.orElseThrow(() -> new RuntimeException("Summoner not found"));
         Summoner summoner = summonerClient.findByRegionAndPuuid(summonerEntity.getRegion(), summonerEntity.getPuuid());
         summonerEntity.setName(summoner.getName());
         summonerEntity.setProfileIconId(summoner.getProfileIconId());
